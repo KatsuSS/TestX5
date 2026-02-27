@@ -11,7 +11,7 @@ class CampaignListCreateView(generics.ListCreateAPIView):
     pagination_class = CampaignPagination
 
     def get_queryset(self):
-        return ads_models.Campaign.objects.filter(user=self.request.user)
+        return ads_models.Campaign.objects.filter(user=self.request.user)  # TODO: LOGIC-4, DJANGO-7
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -24,10 +24,10 @@ class CampaignDetailView(generics.RetrieveUpdateDestroyAPIView):
         return ads_models.Campaign.objects.filter(user=self.request.user)
 
 
-class AdvertisementListCreateView(generics.ListCreateAPIView):
+class AdvertisementListCreateView(generics.ListCreateAPIView):  # TODO: LOGIC-5
     serializer_class = serializers.AdvertisementSerializer
 
-    def get_campaign(self):
+    def get_campaign(self):  # TODO: DJANGO-6
         return get_object_or_404(ads_models.Campaign, id=self.kwargs["campaign_id"], user=self.request.user)
 
     def get_queryset(self):
@@ -48,10 +48,10 @@ class AdvertisementDetailView(generics.RetrieveUpdateDestroyAPIView):
         )
 
 
-class BannerListCreateView(generics.ListCreateAPIView):
+class BannerListCreateView(generics.ListCreateAPIView):  # TODO: LOGIC-5
     serializer_class = serializers.BannerSerializer
 
-    def get_advertisement(self):
+    def get_advertisement(self):  # TODO: DJANGO-6
         return get_object_or_404(ads_models.Advertisement, id=self.kwargs["ad_id"], campaign__user=self.request.user)
 
     def get_queryset(self):
@@ -63,7 +63,7 @@ class BannerListCreateView(generics.ListCreateAPIView):
         serializer.save(advertisement=ad)
 
 
-class BannerDetailView(generics.RetrieveUpdateDestroyAPIView):
+class BannerDetailView(generics.RetrieveUpdateDestroyAPIView):  # TODO: LOGIC-3
     serializer_class = serializers.BannerSerializer
 
     def get_queryset(self):

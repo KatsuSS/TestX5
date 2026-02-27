@@ -19,7 +19,7 @@ class CampaignSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["id", "user"]
 
-    def validate(self, data):
+    def validate(self, data):  # TODO: ERR-1, DJANGO-5
         start = data["start_date"]
         end = data["end_date"]
         if end < start:
@@ -34,7 +34,7 @@ class CampaignSerializer(serializers.ModelSerializer):
 
         return data
 
-    def create(self, validated_data):
+    def create(self, validated_data):  # TODO: ERR-4
         user = self.context["request"].user
         validated_data["user"] = user
         return super().create(validated_data)

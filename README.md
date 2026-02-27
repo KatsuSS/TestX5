@@ -7,4 +7,5 @@
 
 `Запуск:` docker-compose up -d
 
+# TODO: LOGIC-6
 `Создать супер юзера:` docker-compose exec -it web uv run python manage.py createsuperuser

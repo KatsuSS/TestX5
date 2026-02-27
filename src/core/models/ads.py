@@ -6,7 +6,7 @@ from django.core.validators import FileExtensionValidator, MaxValueValidator, Mi
 from django.db import models
 from django.db.models import Q
 
-ALLOWED_EXTENSIONS = ["gif", "png", "jpg", "jpeg", "htm", "html"]
+ALLOWED_EXTENSIONS = ["gif", "png", "jpg", "jpeg", "htm", "html"]  # TODO: SEC-3
 
 
 class TimeStampModel(models.Model):
@@ -37,7 +37,7 @@ class Campaign(TimeStampModel):
     targeting = models.JSONField(default=dict, blank=True, verbose_name="Таргетинг")
 
     class Meta:
-        verbose_name = "Рекламная кампания"
+        verbose_name = "Рекламная кампания"  # TODO: DJANGO-8, LOGIC-4
         verbose_name_plural = "Рекламные кампании"
         constraints = [
             models.CheckConstraint(check=Q(budget__gte=0), name="budget_positive"),
@@ -53,7 +53,7 @@ class Campaign(TimeStampModel):
     def __str__(self):
         return self.name
 
-    def clean(self):
+    def clean(self):  # TODO: DJANGO-5
         if self.end_date < self.start_date:
             raise ValidationError("Дата окончания не может быть раньше даты начала")
 
@@ -78,7 +78,7 @@ class Advertisement(TimeStampModel):
     description = models.TextField(verbose_name="Текст объявления")
 
     class Meta:
-        verbose_name = "Рекламное объявление"
+        verbose_name = "Рекламное объявление"  # TODO: DJANGO-8
         verbose_name_plural = "Рекламные объявления"
 
     def __str__(self):
@@ -100,12 +100,12 @@ class Banner(TimeStampModel):
     file = models.FileField(
         upload_to=banner_upload_path,
         validators=[FileExtensionValidator(allowed_extensions=ALLOWED_EXTENSIONS)],
-        verbose_name="Файл с рекламными материалами",
+        verbose_name="Файл с рекламными материалами",  # TODO: SEC-2
     )
     is_active = models.BooleanField(default=True, verbose_name="Статус", db_index=True)
 
     class Meta:
-        verbose_name = "Баннер"
+        verbose_name = "Баннер"  # TODO: DJANGO-8
         verbose_name_plural = "Баннеры"
 
     def __str__(self):

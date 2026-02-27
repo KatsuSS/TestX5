@@ -6,16 +6,16 @@ from core.models import ads as ad_models
 class CampaignForm(forms.ModelForm):
     class Meta:
         model = ad_models.Campaign
-        exclude = ("user",)
+        exclude = ("user",)  # TODO: DJANGO-4
 
 
 class AdvertisementForm(forms.ModelForm):
     class Meta:
         model = ad_models.Advertisement
-        exclude = ("campaign",)
+        exclude = ("campaign",)  # TODO: DJANGO-4
 
 
 class BannerForm(forms.ModelForm):
     class Meta:
         model = ad_models.Banner
-        exclude = ("advertisement",)
+        exclude = ("advertisement",)  # TODO: DJANGO-4
