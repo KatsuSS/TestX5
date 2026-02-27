@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>
+    {% if object %}
+        Редактировать баннер
+    {% else %}
+        Добавить баннер
+    {% endif %}
+</h2>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+        <table>
+        {{ form.as_table }}
+    </table>
+    <button type="submit">Сохранить</button>
+</form>
+
+<br>
+
+<a href="{% if object %}
+            {% url 'web:ad-detail' object.advertisement.id %}
+         {% else %}
+            {% url 'web:ad-detail' ad.id %}
+         {% endif %}">
+    Назад
+</a>
+
+{% endblock %}

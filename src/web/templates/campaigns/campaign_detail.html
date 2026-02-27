@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Кампания: {{ campaign.name }}</h2>
+
+<a href="{% url 'web:ad-create' campaign.id %}">
+    Добавить объявление
+</a>
+
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Id</th>
+        <th>Название</th>
+        <th>Место размещения</th>
+        <th>Количество баннеров</th>
+        <th>Форматы</th>
+        <th>Действия</th>
+    </tr>
+
+    {% for ad in ads %}
+    <tr>
+        <td><a href="{% url 'web:ad-detail' ad.id %}">{{ ad.id }}</a></td>
+        <td>{{ ad.name }}</td>
+        <td>{{ ad.placement }}</td>
+        <td>{{ ad.banner_count }}</td>
+        <td>{{ ad.file_formats }}</td>
+        <td>
+            <a href="{% url 'web:ad-edit' ad.id %}">Изменить</a>
+            <a href="{% url 'web:ad-delete' ad.id %}">Удалить</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="5">Нет объявлений</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+<a href="{% url 'web:campaign-list' %}">Назад к кампаниям</a>
+
+{% endblock %}

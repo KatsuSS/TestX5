@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Кампании</h1>
+    <a href="{% url 'web:campaign-create' %}">Добавить кампанию</a>
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>Id</th>
+            <th>Название</th>
+            <th>Дата старта</th>
+            <th>Дата окончания</th>
+            <th>Бюджет</th>
+            <th>Стратегия</th>
+            <th>Число показов</th>
+            <th>Кол-во Баннеров</th>
+            <th>Форматы файлов</th>
+            <th>Действия</th>
+        </tr>
+
+        {% for campaign in campaigns %}
+        <tr>
+            <td><a href="{% url 'web:campaign-detail' campaign.id %}">{{ campaign.id }}</a></td>
+            <td>{{ campaign.name }}</td>
+            <td>{{ campaign.start_date }}</td>
+            <td>{{ campaign.end_date }}</td>
+            <td>{{ campaign.budget }}</td>
+            <td>{{ campaign.strategy }}</td>
+            <td>{% if campaign.max_impressions_per_day %}{{ campaign.max_impressions_per_day }}{% else %}{% endif %}</td>
+            <td>{{ campaign.banner_count }}</td>
+            <td>{{ campaign.file_formats }}</td>
+            <td>
+                <a href="{% url 'web:campaign-edit' campaign.pk %}">Изменить</a>
+                <a href="{% url 'web:campaign-delete' campaign.pk %}">Удалить</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div>
+        {% if is_paginated %}
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">Назад</a>
+            {% endif %}
+
+            Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Вперед</a>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}

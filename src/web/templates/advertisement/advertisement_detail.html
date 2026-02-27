@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Объявление: {{ ad.name }}</h2>
+
+<a href="{% url 'web:banner-create' ad.id %}">
+    Добавить баннер
+</a>
+
+<table border="1" cellpadding="5">
+    <tr>
+        <th>UID</th>
+        <th>Размер</th>
+        <th>Формат</th>
+        <th>Статус</th>
+        <th>Действия</th>
+    </tr>
+
+    {% for banner in banners %}
+    <tr>
+        <td>{{ banner.uid }}</td>
+        <td>{{ banner.width }} x {{ banner.height }}</td>
+        <td>{{ banner.file_format }}</td>
+        <td>
+            {% if banner.is_active %}
+                Активен
+            {% else %}
+                Архивирован
+            {% endif %}
+        </td>
+        <td>
+            <a href="{% url 'web:banner-edit' banner.id %}">Редактировать</a>
+
+            {% if banner.is_active %}
+            <form method="post"
+                  action="{% url 'web:banner-archive' banner.id %}"
+                  style="display:inline;">
+                {% csrf_token %}
+                <button type="submit">Архивировать</button>
+            </form>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+<a href="{% url 'web:campaign-detail' ad.campaign.id %}">
+    Назад к объявлениям
+</a>
+
+{% endblock %}
