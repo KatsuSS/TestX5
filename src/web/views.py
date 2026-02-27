@@ -8,7 +8,7 @@ from core.models import ads as ad_models
 from web import forms
 
 
-class CampaignListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class CampaignListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):  # TODO: LOGIC-7
     model = ad_models.Campaign
     template_name = "campaigns/campaign_list.html"
     context_object_name = "campaigns"
@@ -20,10 +20,10 @@ class CampaignListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
             banner_count=Count("advertisements__banners", distinct=True)
         )
 
-        for campaign in queryset:
+        for campaign in queryset:  # TODO: DJANGO-1
             formats = ad_models.Banner.objects.filter(advertisement__campaign=campaign).values_list("file", flat=True)
             unique_formats = {f.split(".")[-1].lower() for f in formats}
-            campaign.file_formats = ", ".join(unique_formats) if unique_formats else ""
+            campaign.file_formats = ", ".join(unique_formats) if unique_formats else ""  # ", ".join(set()) уже даст пустую строку, нет сортировки
 
         return queryset
 
@@ -44,7 +44,7 @@ class CampaignDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView
     model = ad_models.Campaign
     template_name = "campaigns/campaign_detail.html"
     context_object_name = "campaign"
-    permission_required = "core.view_advertisement"
+    permission_required = "core.view_advertisement"  # TODO: LOGIC-1
 
     def get_queryset(self):
         return ad_models.Campaign.objects.filter(user=self.request.user)
@@ -56,7 +56,7 @@ class CampaignDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView
             banner_count=Count("banners", distinct=True)
         )
 
-        for ad in ads:
+        for ad in ads:  # TODO: DJANGO-2
             files = ad_models.Banner.objects.filter(advertisement=ad).values_list("file", flat=True)
             formats = {f.split(".")[-1].lower() for f in files}
             ad.file_formats = ", ".join(formats) if formats else ""
@@ -91,7 +91,7 @@ class AdvertisementCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
     permission_required = "core.add_advertisement"
 
     def dispatch(self, request, *args, **kwargs):
-        self.campaign = ad_models.Campaign.objects.get(pk=kwargs["campaign_id"], user=request.user)
+        self.campaign = ad_models.Campaign.objects.get(pk=kwargs["campaign_id"], user=request.user)  # TODO: SEC-5
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -106,7 +106,7 @@ class AdvertisementDetailView(LoginRequiredMixin, PermissionRequiredMixin, Detai
     model = ad_models.Advertisement
     template_name = "advertisement/advertisement_detail.html"
     context_object_name = "ad"
-    permission_required = "core.view_banner"
+    permission_required = "core.view_banner"  # TODO: LOGIC-2
 
     def get_queryset(self):
         return ad_models.Advertisement.objects.filter(campaign__user=self.request.user)
@@ -115,7 +115,7 @@ class AdvertisementDetailView(LoginRequiredMixin, PermissionRequiredMixin, Detai
         context = super().get_context_data(**kwargs)
 
         banners = ad_models.Banner.objects.filter(advertisement=self.object)
-        for banner in banners:
+        for banner in banners:  # TODO: DJANGO-3
             banner.file_format = banner.file.name.split(".")[-1].lower()
 
         context["banners"] = banners
@@ -150,7 +150,7 @@ class BannerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = "core.add_banner"
 
     def dispatch(self, request, *args, **kwargs):
-        self.ad = ad_models.Advertisement.objects.get(pk=kwargs["ad_id"], campaign__user=request.user)
+        self.ad = ad_models.Advertisement.objects.get(pk=kwargs["ad_id"], campaign__user=request.user)  # TODO: SEC-5
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -183,7 +183,7 @@ class BannerArchiveView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = "core.change_banner"
 
     def post(self, request, pk):
-        banner = ad_models.Banner.objects.get(pk=pk, advertisement__campaign__user=request.user)
+        banner = ad_models.Banner.objects.get(pk=pk, advertisement__campaign__user=request.user)  # TODO: SEC-5
         banner.is_active = False
-        banner.save(update_fields=["is_active"])
+        banner.save(update_fields=["is_active"])  # TODO: ERR-3
         return redirect("web:ad-detail", banner.advertisement.id)

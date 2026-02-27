@@ -31,7 +31,7 @@ filterwarnings = [
 
 addopts = "-v"
 
-testpaths = [
+testpaths = [  # TODO: ERR-6
     "tests"
 ]
 
